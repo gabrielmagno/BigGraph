@@ -8,13 +8,14 @@ void Graph_calculate_WeaklyConnectedComponents(Graph * graph, unsigned int ** we
 {
     Vertex_id vertex, actual_vertex;
     Vertex_id * queue, * predecessors, * successors;
-    unsigned int i, group_id = 0, n_predecessors, n_successors, queue_i = 0, queue_j = 0; 
+    unsigned int i, group_id = 0, n_predecessors, n_successors, queue_i, queue_j; 
     queue = (Vertex_id *) malloc(((*graph).n_vertexes)*sizeof(Vertex_id));
     for (vertex = 0; vertex < ((*graph).n_vertexes); vertex++) {
         (*weakly_connected_components)[vertex] = 0;
     }
     for (vertex = 0; vertex < ((*graph).n_vertexes); vertex++) {
         if ((*weakly_connected_components)[vertex] == 0) {
+            queue_i = queue_j = 0;
             (*weakly_connected_components)[vertex] = ++group_id;
             queue[queue_j++] = vertex;
             while (queue_i < queue_j) {
