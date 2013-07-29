@@ -1,71 +1,85 @@
 #include <stdio.h>
 #include "graph.h"
 
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define LABEL_UNKNOWN 0
+#define LABEL_DISCOVERED 1
+#define LABEL_EXPLORED 2
 
-void Graph_helper_StronglyConnectedComponents_strongconnect(Graph * graph, Vertex_id vertex, Vertex_id * stack, unsigned int * in_stack, unsigned int * stack_i, unsigned int * indexes, unsigned int * index, unsigned int * lowlinks, unsigned int ** strongly_connected_components, unsigned int * group_id)
-{
-    int i;
-    Vertex_id vertex_aux;
-    Vertex_id * successors;
-    unsigned int n_successors;
 
-    indexes[vertex] = ++(*index);
-    lowlinks[vertex] = (*index);
-    stack[(*stack_i)++] = vertex;
-    in_stack[vertex] = 1;
-
-    Graph_vertex_successors(graph, vertex, &successors, &n_successors);
-    for (i = 0; i < n_successors; i++) {
-        if (indexes[successors[i]] == 0) {
-            Graph_helper_StronglyConnectedComponents_strongconnect(graph, successors[i], stack, in_stack, stack_i, indexes, index, lowlinks, strongly_connected_components, group_id);
-            lowlinks[vertex] = MIN(lowlinks[vertex], lowlinks[successors[i]]);
-        }
-        else if (in_stack[successors[i]]) {
-            lowlinks[vertex] = MIN(lowlinks[vertex], indexes[successors[i]]);
-        }
-    }
-    
-    if (lowlinks[vertex] == indexes[vertex]) {
-        (*group_id)++;
-        do {
-            vertex_aux = stack[--(*stack_i)];
-            in_stack[vertex_aux] = 0;
-            (*strongly_connected_components)[vertex_aux] = (*group_id);
-        } while(vertex_aux != vertex);
-    }
-}
-
-/* Tarjan's Algorithm https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm */
 void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** strongly_connected_components)
 {
-    Vertex_id vertex;
-    Vertex_id * stack;
-    unsigned int stack_i = 0, index = 0, group_id = 0;
-    unsigned int * in_stack, * indexes, * lowlinks;
+    int i;
+    Vertex_id vertex, actual_vertex;
+    Vertex_id * adjacents, * stack_global, * stack_DFS;
+    unsigned int n_adjacents, stack_global_i = 0, stack_DFS_i, group_id = 0;
+    unsigned int * stack_global_in;
+    char * labels_DFS;
     
-    stack = (Vertex_id *) malloc(((*graph).n_vertexes)*sizeof(Vertex_id));
-    in_stack = (unsigned int *) malloc(((*graph).n_vertexes)*sizeof(unsigned int));
-    indexes = (unsigned int *) malloc(((*graph).n_vertexes)*sizeof(unsigned int));
-    lowlinks = (unsigned int *) malloc(((*graph).n_vertexes)*sizeof(unsigned int));
-
+    stack_global = (Vertex_id *) malloc((100*(*graph).n_vertexes)*sizeof(Vertex_id));
+    stack_global_in = (unsigned int *) malloc(((*graph).n_vertexes)*sizeof(unsigned int));
+    stack_DFS = (Vertex_id *) malloc(((*graph).n_vertexes)*sizeof(Vertex_id));
+    labels_DFS = (char *) malloc(((*graph).n_vertexes)*sizeof(char));
+    
     for (vertex = 0; vertex < ((*graph).n_vertexes); vertex++) {
         (*strongly_connected_components)[vertex] = 0;
-        in_stack[vertex] = 0;
-        indexes[vertex] = 0;
+        stack_global_in[vertex] = 0;
+        labels_DFS[vertex] = LABEL_UNKNOWN;
+    }
+    
+    for (vertex = 0; vertex < ((*graph).n_vertexes); vertex++) {
+        if (!stack_global_in[vertex]) {
+            labels_DFS[vertex] = LABEL_DISCOVERED;
+            stack_DFS_i = 0;
+            stack_DFS[stack_DFS_i++] = vertex;
+            while (stack_DFS_i > 0) {
+                actual_vertex = stack_DFS[--stack_DFS_i];
+                Graph_vertex_successors(graph, actual_vertex, &adjacents, &n_adjacents);
+                for (i = 0; i < n_adjacents; i++) {
+                    if (labels_DFS[adjacents[i]] == LABEL_UNKNOWN) {
+                        labels_DFS[adjacents[i]] = LABEL_DISCOVERED;
+                        stack_DFS[stack_DFS_i++] = adjacents[i];
+                        break;
+                    }
+                }
+                labels_DFS[actual_vertex] = LABEL_EXPLORED;
+                stack_global[stack_global_i++] = actual_vertex;
+                stack_global_in[actual_vertex] = 1;
+            }
+        }
     }
 
     for (vertex = 0; vertex < ((*graph).n_vertexes); vertex++) {
-        if (indexes[vertex] == 0) {
-            Graph_helper_StronglyConnectedComponents_strongconnect(graph, vertex, stack, in_stack, &stack_i, indexes, &index, lowlinks, strongly_connected_components, &group_id);
+        labels_DFS[vertex] = LABEL_UNKNOWN;
+    }
+
+    while (stack_global_i > 0) {
+        vertex = stack_global[--stack_global_i];
+        if (stack_global_in[vertex]) {
+            group_id++;
+            labels_DFS[vertex] = LABEL_DISCOVERED;
+            stack_DFS_i = 0;
+            stack_DFS[stack_DFS_i++] = vertex;
+            while (stack_DFS_i > 0) {
+                actual_vertex = stack_DFS[--stack_DFS_i];
+                Graph_vertex_predecessors(graph, actual_vertex, &adjacents, &n_adjacents);
+                for (i = 0; i < n_adjacents; i++) {
+                    if (labels_DFS[adjacents[i]] == LABEL_UNKNOWN) {
+                        labels_DFS[adjacents[i]] = LABEL_DISCOVERED;
+                        stack_DFS[stack_DFS_i++] = adjacents[i];
+                        break;
+                    }
+                }
+                labels_DFS[actual_vertex] = LABEL_EXPLORED;
+                (*strongly_connected_components)[actual_vertex] = group_id;
+                stack_global_in[actual_vertex] = 0;
+            }
         }
     }
-    
-    free(stack);
-    free(in_stack);
-    free(indexes);
-    free(lowlinks);
+
+    free(stack_global);
+    free(stack_global_in);
+    free(stack_DFS);
+    free(labels_DFS);
 }
 
 int main(int argc, char * argv[])
