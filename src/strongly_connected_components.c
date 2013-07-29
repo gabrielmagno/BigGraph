@@ -8,10 +8,9 @@
 
 void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** strongly_connected_components)
 {
-    int i;
     Vertex_id vertex, actual_vertex;
     Vertex_id * adjacents, * stack_global, * stack_DFS;
-    unsigned int n_adjacents, stack_global_i = 0, stack_DFS_i, group_id = 0;
+    unsigned int i, n_adjacents, stack_global_i = 0, stack_DFS_i, group_id = 0, stack_DFS_i_aux;
     unsigned int * stack_global_in;
     char * labels_DFS;
     
@@ -31,19 +30,33 @@ void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** 
             labels_DFS[vertex] = LABEL_DISCOVERED;
             stack_DFS_i = 0;
             stack_DFS[stack_DFS_i++] = vertex;
+            printf("v=%d\n", vertex);
             while (stack_DFS_i > 0) {
                 actual_vertex = stack_DFS[--stack_DFS_i];
+                printf("    av=%d\n", actual_vertex);
+                stack_DFS_i_aux = stack_DFS_i;
                 Graph_vertex_successors(graph, actual_vertex, &adjacents, &n_adjacents);
                 for (i = 0; i < n_adjacents; i++) {
                     if (labels_DFS[adjacents[i]] == LABEL_UNKNOWN) {
+                        printf("    DISCOVERED = %d\n", adjacents[i]);
                         labels_DFS[adjacents[i]] = LABEL_DISCOVERED;
                         stack_DFS[stack_DFS_i++] = adjacents[i];
                         break;
                     }
                 }
+                if (stack_DFS_i_aux != stack_DFS_i) {
+                    continue;
+                }
                 labels_DFS[actual_vertex] = LABEL_EXPLORED;
                 stack_global[stack_global_i++] = actual_vertex;
                 stack_global_in[actual_vertex] = 1;
+                printf("    EXPLORED = %d\n", actual_vertex);
+                //int j;
+                //printf("v=%d, av=%d, s =", vertex, actual_vertex);
+                //for (j = 0; j < stack_global_i; j++) {
+                //    printf(" %d", stack_global[j]);
+                //}
+                //printf("\n");
             }
         }
     }
@@ -59,19 +72,33 @@ void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** 
             labels_DFS[vertex] = LABEL_DISCOVERED;
             stack_DFS_i = 0;
             stack_DFS[stack_DFS_i++] = vertex;
+            printf("*v=%d\n", vertex);
             while (stack_DFS_i > 0) {
                 actual_vertex = stack_DFS[--stack_DFS_i];
+                printf("    av=%d\n", actual_vertex);
+                stack_DFS_i_aux = stack_DFS_i;
                 Graph_vertex_predecessors(graph, actual_vertex, &adjacents, &n_adjacents);
                 for (i = 0; i < n_adjacents; i++) {
                     if (labels_DFS[adjacents[i]] == LABEL_UNKNOWN) {
+                        printf("    DISCOVERED = %d\n", adjacents[i]);
                         labels_DFS[adjacents[i]] = LABEL_DISCOVERED;
                         stack_DFS[stack_DFS_i++] = adjacents[i];
                         break;
                     }
                 }
+                if (stack_DFS_i_aux != stack_DFS_i) {
+                    continue;
+                }
                 labels_DFS[actual_vertex] = LABEL_EXPLORED;
                 (*strongly_connected_components)[actual_vertex] = group_id;
                 stack_global_in[actual_vertex] = 0;
+                printf("    EXPLORED = %d\n", actual_vertex);
+                //int j;
+                //printf("v=%d, av=%d, s =", vertex, actual_vertex);
+                //for (j = 0; j < stack_global_i; j++) {
+                //    printf(" %d", stack_global[j]);
+                //}
+                //printf("\n");
             }
         }
     }
