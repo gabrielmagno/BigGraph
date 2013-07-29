@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include "graph.h"
 
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-
 void Graph_calculate_WeaklyConnectedComponents(Graph * graph, unsigned int ** weakly_connected_components)
 {
     Vertex_id vertex, actual_vertex;
