@@ -5,7 +5,6 @@
 #define LABEL_DISCOVERED 1
 #define LABEL_EXPLORED 2
 
-
 void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** strongly_connected_components)
 {
     Vertex_id vertex, actual_vertex;
@@ -35,6 +34,7 @@ void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** 
                     if (labels_DFS[adjacents[i]] == LABEL_UNKNOWN) {
                         labels_DFS[adjacents[i]] = LABEL_DISCOVERED;
                         stack_DFS[stack_DFS_i++] = adjacents[i];
+                        break;
                     }
                 }
                 if (stack_DFS_i_aux != stack_DFS_i) {
@@ -66,6 +66,7 @@ void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** 
                     if (labels_DFS[adjacents[i]] == LABEL_UNKNOWN) {
                         labels_DFS[adjacents[i]] = LABEL_DISCOVERED;
                         stack_DFS[stack_DFS_i++] = adjacents[i];
+                        break;
                     }
                 }
                 if (stack_DFS_i_aux != stack_DFS_i) {
