@@ -1,4 +1,3 @@
-
 CC = gcc
  
 CFLAGS = -Wall
@@ -21,5 +20,4 @@ bin/%: src/%.c src/graph.c src/graph.h
 	@$(CC) $(CFLAGS) src/graph.c $< -o $@
 
 clean:
-	rm -f bin/* 
-
+	rm -f bin/*

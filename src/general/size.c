@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../graph/graph.h"
+#include "graph.h"
 
 void bytes_readable(unsigned long long int n_bytes, double * n, char * s)
 {
