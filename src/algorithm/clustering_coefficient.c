@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include "graph.h"
-
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#include "clustering_coefficient.h"
 
 void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_coefficient)
 {
@@ -30,26 +26,5 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
         }
     }
     free(friends);
-}
-
-int main(int argc, char * argv[])
-{
-    double * clustering_coefficient;
-    Graph graph;
-    Vertex_id vertex;
-
-    Graph_open(&graph, NULL);
-    clustering_coefficient = (double *) malloc(graph.n_vertexes*sizeof(double));
-
-    Graph_calculate_ClusteringCoefficient(&graph, &clustering_coefficient);
-
-    for (vertex = 0; vertex < graph.n_vertexes; vertex++) {
-        fprintf(stdout, "%d %f\n", vertex, clustering_coefficient[vertex]);
-    }
-    
-    Graph_close(&graph);
-    free(clustering_coefficient);
-
-    return EXIT_SUCCESS;
 }
 

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "graph.h"
+#include "graph/graph.h"
 
 int main(int argc, char * argv[])
 {

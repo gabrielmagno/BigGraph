@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include "graph.h"
+#include "weakly_connected_components.h"
 
 void Graph_calculate_WeaklyConnectedComponents(Graph * graph, unsigned int ** weakly_connected_components)
 {
@@ -35,26 +34,5 @@ void Graph_calculate_WeaklyConnectedComponents(Graph * graph, unsigned int ** we
         }
     }
     free(queue);
-}
-
-int main(int argc, char * argv[])
-{
-    unsigned int * weakly_connected_components;
-    Graph graph;
-    Vertex_id vertex;
-
-    Graph_open(&graph, NULL);
-    weakly_connected_components = (unsigned int *) malloc(graph.n_vertexes*sizeof(unsigned int));
-
-    Graph_calculate_WeaklyConnectedComponents(&graph, &weakly_connected_components);
-
-    for (vertex = 0; vertex < graph.n_vertexes; vertex++) {
-        fprintf(stdout, "%d %d\n", vertex, weakly_connected_components[vertex]);
-    }
-    
-    Graph_close(&graph);
-    free(weakly_connected_components);
-
-    return EXIT_SUCCESS;
 }
 

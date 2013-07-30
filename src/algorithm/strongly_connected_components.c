@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include "graph.h"
-
-#define LABEL_UNKNOWN 0
-#define LABEL_DISCOVERED 1
-#define LABEL_EXPLORED 2
+#include "strongly_connected_components.h"
 
 void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** strongly_connected_components)
 {
@@ -82,26 +77,5 @@ void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** 
     free(stack_global);
     free(stack_DFS);
     free(labels_DFS);
-}
-
-int main(int argc, char * argv[])
-{
-    unsigned int * strongly_connected_components;
-    Graph graph;
-    Vertex_id vertex;
-
-    Graph_open(&graph, NULL);
-    strongly_connected_components = (unsigned int *) malloc(graph.n_vertexes*sizeof(unsigned int));
-
-    Graph_calculate_StronglyConnectedComponents(&graph, &strongly_connected_components);
-
-    for (vertex = 0; vertex < graph.n_vertexes; vertex++) {
-        fprintf(stdout, "%d %d\n", vertex, strongly_connected_components[vertex]);
-    }
-    
-    Graph_close(&graph);
-    free(strongly_connected_components);
-
-    return EXIT_SUCCESS;
 }
 
