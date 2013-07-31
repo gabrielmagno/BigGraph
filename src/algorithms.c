@@ -17,7 +17,9 @@ int main(int argc, char * argv[])
     unsigned int * weakly_connected_components;
     unsigned int * strongly_connected_components;
 
-    Graph_open(&graph, NULL);
+    FILE * outfile;
+
+    Graph_open(&graph, argv[1]);
 
     reciprocity = (double *) malloc(graph.n_vertexes*sizeof(double));
     clustering_coefficient = (double *) malloc(graph.n_vertexes*sizeof(double));
@@ -30,9 +32,10 @@ int main(int argc, char * argv[])
     Graph_calculate_PageRank(&graph, &pagerank, 1);
     Graph_calculate_WeaklyConnectedComponents(&graph, &weakly_connected_components);
     Graph_calculate_StronglyConnectedComponents(&graph, &strongly_connected_components);
-
+    
+    outfile = fopen(argv[2], "w");
     for (vertex = 0; vertex < graph.n_vertexes; vertex++) {
-        fprintf(stdout, "%d %d %d %f %f %f %d %d\n", vertex, graph.vertexes[vertex].in_degree,
+        fprintf(outfile, "%d %d %d %f %f %f %d %d\n", vertex, graph.vertexes[vertex].in_degree,
                                                              graph.vertexes[vertex].out_degree,
                                                              reciprocity[vertex],
                                                              clustering_coefficient[vertex],
@@ -40,6 +43,7 @@ int main(int argc, char * argv[])
                                                              weakly_connected_components[vertex],
                                                              strongly_connected_components[vertex]);
     }
+    fclose(outfile);
     
     Graph_close(&graph);
 

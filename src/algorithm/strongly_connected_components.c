@@ -36,7 +36,7 @@ void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** 
                     continue;
                 }
                 labels_DFS[actual_vertex] = LABEL_EXPLORED;
-                stack_DFS[--stack_DFS_i];
+                --stack_DFS_i;
                 stack_global[stack_global_i++] = actual_vertex;
             }
         }
@@ -68,7 +68,7 @@ void Graph_calculate_StronglyConnectedComponents(Graph * graph, unsigned int ** 
                     continue;
                 }
                 labels_DFS[actual_vertex] = LABEL_EXPLORED;
-                stack_DFS[--stack_DFS_i];
+                --stack_DFS_i;
                 (*strongly_connected_components)[actual_vertex] = group_id;
             }
         }
