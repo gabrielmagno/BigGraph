@@ -1,6 +1,6 @@
 CC = gcc
  
-CFLAGS = -Wall
+CFLAGS = -Wall -O3
 
 INC = -Isrc/
 
@@ -32,7 +32,7 @@ build/graph_%.o: src/graph/%.c src/graph/%.h
 	$(CC) $(INC) $(CFLAGS) -c $< -o $@
 
 build/algorithm_%.o: src/algorithm/%.c src/algorithm/%.h
-	$(CC) $(INC) $(CFLAGS) -c $< -o $@
+	$(CC) $(INC) $(CFLAGS) -lm -c $< -o $@
 
 build/general_%.o: src/%.c
 	$(CC) $(INC) $(CFLAGS) -c $< -o $@

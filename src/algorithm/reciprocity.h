@@ -1,3 +1,4 @@
+#include <math.h>
 #include "graph/graph.h"
 
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))

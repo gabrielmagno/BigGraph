@@ -14,7 +14,12 @@ void Graph_calculate_Reciprocity(Graph * graph, double ** reciprocity)
 
     for (vertex = 0; vertex < (*graph).n_vertexes; vertex++) {
         Graph_vertex_friends(graph, vertex, &friends, &n_friends);
-        (*reciprocity)[vertex] = n_friends/((double) (*graph).vertexes[vertex].out_degree);
+        if ((*graph).vertexes[vertex].out_degree > 0) {
+            (*reciprocity)[vertex] = n_friends/((double) (*graph).vertexes[vertex].out_degree);
+        }
+        else {
+            (*reciprocity)[vertex] = nan("");
+        }
     }
 
     free(friends);

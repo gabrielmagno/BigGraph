@@ -13,7 +13,6 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
         Graph_vertex_friends(graph, vertex, &friends, &n_friends);
         n_possible_links = n_friends*(n_friends-1);
         n_links = 0;
-        (*clustering_coefficient)[vertex] = 0.0;
         if (n_possible_links > 0) {
             for (i = 0; i < n_friends; i++) {
                 for (j = 0; j < n_friends; j++) {
@@ -23,6 +22,9 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
                 }
             }
             (*clustering_coefficient)[vertex] = n_links/((double) n_possible_links);
+        }
+        else {
+            (*clustering_coefficient)[vertex] = nan("");
         }
     }
     free(friends);
