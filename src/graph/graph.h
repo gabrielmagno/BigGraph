@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 
 typedef unsigned int Vertex_id;
 

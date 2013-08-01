@@ -4,7 +4,6 @@ void Graph_open(Graph * graph, char * graph_filename)
 {
     Vertex_id vertex, friend;
     unsigned int it, i;
-    clock_t time_start, time_end, ftime_start, ftime_end;
     
     FILE * infile;
     if (graph_filename != NULL) {
@@ -15,10 +14,6 @@ void Graph_open(Graph * graph, char * graph_filename)
     }
 
     // Read size of graph and allocate memory
-    fprintf(stderr, "* Creating graph\n");
-    ftime_start = clock();
-    fprintf(stderr, "    - Allocating memory... ");
-    time_start = clock();
     fscanf(infile, "%d", &((*graph).n_vertexes));
     fscanf(infile, "%d", &((*graph).n_edges));
     (*graph).vertexes = (Vertex *) malloc(((*graph).n_vertexes)*sizeof(Vertex));
@@ -27,12 +22,8 @@ void Graph_open(Graph * graph, char * graph_filename)
     for (vertex = 0; vertex < ((*graph).n_vertexes); vertex++) {
         (*graph).vertexes[vertex] = (Vertex) {0, 0, 0, 0};
     }
-    time_end = clock();
-    fprintf(stderr, "OK [%lf s]\n", ((time_end - time_start)/((double) CLOCKS_PER_SEC)));
 
     // Read the outgoing edges list
-    fprintf(stderr, "    - Reading outgoing edges... ");
-    time_start = clock();
     it = 0;
     while (fscanf(infile, "%d", &vertex) == 1) {
         fscanf(infile, "%d", &((*graph).vertexes[vertex].out_degree));
@@ -43,12 +34,8 @@ void Graph_open(Graph * graph, char * graph_filename)
         }
     }
     fclose(infile);
-    time_end = clock();
-    fprintf(stderr, "OK [%lf s]\n", ((time_end - time_start)/((double) CLOCKS_PER_SEC)));
 
     // Create the incoming edges list
-    fprintf(stderr, "    - Creating incoming edges... ");
-    time_start = clock();
     it = 0;
     for (vertex = 0; vertex < ((*graph).n_vertexes); vertex++) {
         (*graph).vertexes[vertex].in_edges_pos = it;
@@ -63,10 +50,6 @@ void Graph_open(Graph * graph, char * graph_filename)
     for (vertex = 0; vertex < ((*graph).n_vertexes); vertex++) {
         (*graph).vertexes[vertex].in_edges_pos -= (*graph).vertexes[vertex].in_degree;
     }
-    time_end = clock();
-    fprintf(stderr, "OK [%lf s]\n", ((time_end - time_start)/((double) CLOCKS_PER_SEC)));
-    ftime_end = clock();
-    fprintf(stderr, "    + Total elapsed time: %lf s\n", ((ftime_end - ftime_start)/((double) CLOCKS_PER_SEC)));
 }
 
 void Graph_close(Graph * graph)
