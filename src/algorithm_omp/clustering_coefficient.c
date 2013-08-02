@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <omp.h>
-#include "graph.h"
-
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#include "clustering_coefficient.h"
 
 void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_coefficient)
 {
@@ -16,6 +11,7 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
     for (vertex = 0; vertex < (*graph).n_vertexes; vertex++) {
         max_n_friends = MAX(MIN((*graph).vertexes[vertex].out_degree, (*graph).vertexes[vertex].in_degree), max_n_friends);
     }
+
     #pragma omp parallel
     {
         unsigned int i, j, n_friends, n_links, n_possible_links;
@@ -26,7 +22,6 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
             Graph_vertex_friends(graph, vertex, &friends, &n_friends);
             n_possible_links = n_friends*(n_friends-1);
             n_links = 0;
-            (*clustering_coefficient)[vertex] = 0.0;
             if (n_possible_links > 0) {
                 for (i = 0; i < n_friends; i++) {
                     for (j = 0; j < n_friends; j++) {
@@ -37,29 +32,11 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
                 }
                 (*clustering_coefficient)[vertex] = n_links/((double) n_possible_links);
             }
+            else {
+                (*clustering_coefficient)[vertex] = nan("");
+            }
         }
         free(friends);
     }
-}
-
-int main(int argc, char * argv[])
-{
-    double * clustering_coefficient;
-    Graph graph;
-    Vertex_id vertex;
-
-    Graph_open(&graph, NULL);
-    clustering_coefficient = (double *) malloc(graph.n_vertexes*sizeof(double));
-
-    Graph_calculate_ClusteringCoefficient(&graph, &clustering_coefficient);
-
-    for (vertex = 0; vertex < graph.n_vertexes; vertex++) {
-        fprintf(stdout, "%d %f\n", vertex, clustering_coefficient[vertex]);
-    }
-    
-    Graph_close(&graph);
-    free(clustering_coefficient);
-
-    return EXIT_SUCCESS;
 }
 

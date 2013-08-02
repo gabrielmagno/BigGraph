@@ -5,10 +5,12 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
     Vertex_id vertex;
     Vertex_id * friends;
     unsigned int i, j, max_n_friends = 0, n_friends, n_links, n_possible_links; 
+
     for (vertex = 0; vertex < (*graph).n_vertexes; vertex++) {
         max_n_friends = MAX(MIN((*graph).vertexes[vertex].out_degree, (*graph).vertexes[vertex].in_degree), max_n_friends);
     }
     friends = (Vertex_id *) malloc(max_n_friends*sizeof(Vertex_id));
+
     for (vertex = 0; vertex < (*graph).n_vertexes; vertex++) {
         Graph_vertex_friends(graph, vertex, &friends, &n_friends);
         n_possible_links = n_friends*(n_friends-1);
@@ -27,6 +29,7 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
             (*clustering_coefficient)[vertex] = nan("");
         }
     }
+
     free(friends);
 }
 

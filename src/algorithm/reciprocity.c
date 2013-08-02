@@ -4,9 +4,8 @@ void Graph_calculate_Reciprocity(Graph * graph, double ** reciprocity)
 {
     Vertex_id vertex;
     Vertex_id * friends;
-    unsigned int n_friends, max_n_friends; 
+    unsigned int n_friends, max_n_friends = 0; 
     
-    max_n_friends = 0;
     for (vertex = 0; vertex < (*graph).n_vertexes; vertex++) {
         max_n_friends = MAX(MIN((*graph).vertexes[vertex].out_degree, (*graph).vertexes[vertex].in_degree), max_n_friends);
     }

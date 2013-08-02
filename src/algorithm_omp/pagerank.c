@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include <omp.h>
-#include "graph.h"
-
-#define ABS(a) (((a) > 0) ? (a) : (-(a)))
-
-#define MAX_ITERATIONS 50
-#define MAX_ERROR 1e-6
-#define DAMPING_FACTOR 0.85
+#include "pagerank.h"
 
 void Graph_calculate_PageRank(Graph * graph, double ** pagerank, int do_dangle_sum)
 {
@@ -96,26 +88,5 @@ void Graph_calculate_PageRank(Graph * graph, double ** pagerank, int do_dangle_s
 
     free(pagerank_new);
     free(partial_values);
-}
-
-int main(int argc, char * argv[])
-{
-    double * pagerank;
-    Graph graph;
-    Vertex_id vertex;
-
-    Graph_open(&graph, NULL);
-    pagerank = (double *) malloc(graph.n_vertexes*sizeof(double));
-
-    Graph_calculate_PageRank(&graph, &pagerank, 1);
-
-    for (vertex = 0; vertex < graph.n_vertexes; vertex++) {
-        fprintf(stdout, "%d %f\n", vertex, pagerank[vertex]);
-    }
-    
-    Graph_close(&graph);
-    free(pagerank);
-
-    return EXIT_SUCCESS;
 }
 
