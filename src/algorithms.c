@@ -70,7 +70,7 @@ int main(int argc, char * argv[])
     clock_start("Writing results", &time_start, &time_stop);
     outfile = fopen(argv[2], "w");
     for (vertex = 0; vertex < graph.n_vertexes; vertex++) {
-        fprintf(outfile, "%d %d %d %lf %lf %lf %d %d\n", vertex, graph.vertexes[vertex].in_degree,
+        fprintf(outfile, "%d %d %d %.12lf %.12lf %.12lf %d %d\n", vertex, graph.vertexes[vertex].in_degree,
                                                              graph.vertexes[vertex].out_degree,
                                                              reciprocity[vertex],
                                                              clustering_coefficient[vertex],
