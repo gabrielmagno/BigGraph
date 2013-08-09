@@ -9,16 +9,23 @@
 #include "algorithm/weakly_connected_components.h"
 #include "algorithm/strongly_connected_components.h"
 
-void clock_start(char * message, clock_t * time_start, clock_t * time_stop) 
+typedef struct time_measure {
+    struct timeval start;
+    struct timeval stop;
+    float total;
+} time_measure;
+
+void time_start(char * message, time_measure * time) 
 {
     fprintf(stderr, "+ %s... ", message);
-    *time_start = clock();
+    gettimeofday(&((*time).start), NULL);
 }
 
-void clock_stop(clock_t * time_start, clock_t * time_stop) 
+void time_stop(time_measure * time) 
 {
-    *time_stop = clock();
-    fprintf(stderr, "OK [%lf s]\n", (((*time_stop) - (*time_start))/((double) CLOCKS_PER_SEC)));
+    gettimeofday(&((*time).stop), NULL);
+    (*time).total = ((((*time).stop.tv_sec - (*time).start.tv_sec)*1000000) + ((*time).stop.tv_usec - (*time).start.tv_usec))/1000000;
+    fprintf(stderr, "OK [%.2f s]\n", (*time).total);
 }
 
 int main(int argc, char * argv[])
@@ -33,41 +40,41 @@ int main(int argc, char * argv[])
     unsigned int * strongly_connected_components;
 
     FILE * outfile;
-    clock_t time_start, time_stop;
+    time_measure time;
 
-    clock_start("Reading graph", &time_start, &time_stop);
+    time_start("Reading graph", &time);
     Graph_open(&graph, argv[1]);
-    clock_stop(&time_start, &time_stop);
+    time_stop(&time);
 
-    clock_start("Allocating structures", &time_start, &time_stop);
+    time_start("Allocating structures", &time);
     reciprocity = (double *) malloc(graph.n_vertexes*sizeof(double));
     clustering_coefficient = (double *) malloc(graph.n_vertexes*sizeof(double));
     pagerank = (double *) malloc(graph.n_vertexes*sizeof(double));
     weakly_connected_components = (unsigned int *) malloc(graph.n_vertexes*sizeof(unsigned int));
     strongly_connected_components = (unsigned int *) malloc(graph.n_vertexes*sizeof(unsigned int));
-    clock_stop(&time_start, &time_stop);
+    time_stop(&time);
 
-    clock_start("Calculating Reciprocity", &time_start, &time_stop);
+    time_start("Calculating Reciprocity", &time);
     Graph_calculate_Reciprocity(&graph, &reciprocity);
-    clock_stop(&time_start, &time_stop);
+    time_stop(&time);
 
-    clock_start("Calculating Clustering Coef", &time_start, &time_stop);
+    time_start("Calculating Clustering Coef", &time);
     Graph_calculate_ClusteringCoefficient(&graph, &clustering_coefficient);
-    clock_stop(&time_start, &time_stop);
+    time_stop(&time);
 
-    clock_start("Calculating PageRank", &time_start, &time_stop);
+    time_start("Calculating PageRank", &time);
     Graph_calculate_PageRank(&graph, &pagerank, 1);
-    clock_stop(&time_start, &time_stop);
+    time_stop(&time);
 
-    clock_start("Calculating Weakly CC", &time_start, &time_stop);
+    time_start("Calculating Weakly CC", &time);
     Graph_calculate_WeaklyConnectedComponents(&graph, &weakly_connected_components);
-    clock_stop(&time_start, &time_stop);
+    time_stop(&time);
 
-    clock_start("Calculating Strongly CC", &time_start, &time_stop);
+    time_start("Calculating Strongly CC", &time);
     Graph_calculate_StronglyConnectedComponents(&graph, &strongly_connected_components);
-    clock_stop(&time_start, &time_stop);
+    time_stop(&time);
    
-    clock_start("Writing results", &time_start, &time_stop);
+    time_start("Writing results", &time);
     outfile = fopen(argv[2], "w");
     for (vertex = 0; vertex < graph.n_vertexes; vertex++) {
         fprintf(outfile, "%d %d %d %.12lf %.12lf %.12lf %d %d\n", vertex, graph.vertexes[vertex].in_degree,
@@ -79,19 +86,19 @@ int main(int argc, char * argv[])
                                                              strongly_connected_components[vertex]);
     }
     fclose(outfile);
-    clock_stop(&time_start, &time_stop);
+    time_stop(&time);
    
-    clock_start("Deallocating graph", &time_start, &time_stop);
+    time_start("Deallocating graph", &time);
     Graph_close(&graph);
-    clock_stop(&time_start, &time_stop);
+    time_stop(&time);
     
-    clock_start("Deallocating structures", &time_start, &time_stop);
+    time_start("Deallocating structures", &time);
     free(reciprocity);
     free(clustering_coefficient);
     free(pagerank);
     free(weakly_connected_components);
     free(strongly_connected_components);
-    clock_stop(&time_start, &time_stop);
+    time_stop(&time);
 
     return EXIT_SUCCESS;
 }
