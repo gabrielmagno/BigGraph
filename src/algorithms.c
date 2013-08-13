@@ -39,11 +39,20 @@ int main(int argc, char * argv[])
     unsigned int * weakly_connected_components;
     unsigned int * strongly_connected_components;
 
-    FILE * outfile;
+    FILE * infile, * outfile;
     time_measure time;
 
     time_start("Reading graph", &time);
-    Graph_open(&graph, argv[1]);
+    if (argc >= 2) {
+        infile = fopen(argv[1], "r");
+    }
+    else {
+        infile = stdin;
+    }
+    Graph_open(&graph, infile);
+    if (argc >= 2) {
+        fclose(infile);
+    }
     time_stop(&time);
 
     time_start("Allocating structures", &time);
@@ -75,7 +84,12 @@ int main(int argc, char * argv[])
     time_stop(&time);
    
     time_start("Writing results", &time);
-    outfile = fopen(argv[2], "w");
+    if (argc >= 3) {
+        outfile = fopen(argv[2], "w");
+    }
+    else {
+        outfile = stdout;
+    }
     for (vertex = 0; vertex < graph.n_vertexes; vertex++) {
         fprintf(outfile, "%d %d %d %.12lf %.12lf %.12lf %d %d\n", vertex, graph.vertexes[vertex].in_degree,
                                                              graph.vertexes[vertex].out_degree,
@@ -85,7 +99,9 @@ int main(int argc, char * argv[])
                                                              weakly_connected_components[vertex],
                                                              strongly_connected_components[vertex]);
     }
-    fclose(outfile);
+    if (argc >= 3) {
+        fclose(outfile);
+    }
     time_stop(&time);
    
     time_start("Deallocating graph", &time);

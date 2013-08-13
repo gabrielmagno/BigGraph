@@ -1,18 +1,10 @@
 #include "graph.h"
 
-void Graph_open(Graph * graph, char * graph_filename) 
+void Graph_open(Graph * graph, FILE * infile) 
 {
     Vertex_id vertex, friend;
     unsigned int it, i;
     
-    FILE * infile;
-    if (graph_filename != NULL) {
-        infile = fopen(graph_filename, "r");
-    }
-    else {
-        infile = stdin;
-    }
-
     // Read size of graph and allocate memory
     fscanf(infile, "%d", &((*graph).n_vertexes));
     fscanf(infile, "%d", &((*graph).n_edges));
@@ -33,7 +25,6 @@ void Graph_open(Graph * graph, char * graph_filename)
             (*graph).vertexes[(*graph).out_edges[it-1]].in_degree++;
         }
     }
-    fclose(infile);
 
     // Create the incoming edges list
     it = 0;
@@ -133,17 +124,10 @@ int Graph_edge_exists(Graph * graph, Vertex_id v_from, Vertex_id v_to)
     }
 }
 
-void Graph_print(Graph * graph, char * output_filename)
+void Graph_print(Graph * graph, FILE * outfile)
 {
     Vertex_id vertex;
     unsigned int edge;
-    FILE * outfile;
-    if (output_filename != NULL) {
-        outfile = fopen(output_filename, "r");
-    }
-    else {
-        outfile = stdout;
-    }
     fprintf(outfile, "========== Adjacency List ==========\n");
     fprintf(outfile, "* G(V, E)\n* |V| = %d\n* |E| = %d\n", (*graph).n_vertexes, (*graph).n_edges);
     for (vertex = 0; vertex < ((*graph).n_vertexes); vertex++) {
@@ -160,21 +144,11 @@ void Graph_print(Graph * graph, char * output_filename)
         fprintf(outfile, "\n");
     }
     fprintf(outfile, "------------------------------------\n");
-    if (output_filename != NULL) {
-        fclose(outfile);
-    }
 }
 
-void Graph_print_matrix(Graph * graph, char * output_filename)
+void Graph_print_matrix(Graph * graph, FILE * outfile)
 {
     Vertex_id vertex_from, vertex_to;
-    FILE * outfile;
-    if (output_filename != NULL) {
-        outfile = fopen(output_filename, "r");
-    }
-    else {
-        outfile = stdout;
-    }
     fprintf(outfile, "========== Adjacency Matrix ==========\n");
     for (vertex_from = 0; vertex_from < ((*graph).n_vertexes); vertex_from++) {
         fprintf(outfile, "%d:", vertex_from);
@@ -184,23 +158,13 @@ void Graph_print_matrix(Graph * graph, char * output_filename)
         fprintf(outfile, "\n");
     }
     fprintf(outfile, "--------------------------------------\n");
-    if (output_filename != NULL) {
-        fclose(outfile);
-    }
 }
 
-void Graph_print_friends(Graph * graph, char * output_filename)
+void Graph_print_friends(Graph * graph, FILE * outfile)
 {
     Vertex_id vertex;
     Vertex_id * friends;
     unsigned int i, n_friends;
-    FILE * outfile;
-    if (output_filename != NULL) {
-        outfile = fopen(output_filename, "r");
-    }
-    else {
-        outfile = stdout;
-    }
     fprintf(outfile, "========== Friends List ==========\n");
     friends = (Vertex_id *) malloc((*graph).n_vertexes*sizeof(Vertex_id));
     for (vertex = 0; vertex < (*graph).n_vertexes; vertex++) {
@@ -213,7 +177,4 @@ void Graph_print_friends(Graph * graph, char * output_filename)
     }
     free(friends);
     fprintf(outfile, "----------------------------------\n");
-    if (output_filename != NULL) {
-        fclose(outfile);
-    }
 }

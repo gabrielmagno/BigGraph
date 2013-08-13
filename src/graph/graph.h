@@ -21,7 +21,7 @@ typedef struct Graph {
     Vertex_id * in_edges;
 } Graph;
 
-void Graph_open(Graph * graph, char * graph_filename); 
+void Graph_open(Graph * graph, FILE * infile); 
 
 void Graph_close(Graph * graph);
 
@@ -33,10 +33,10 @@ void Graph_vertex_friends(Graph * graph, Vertex_id vertex, Vertex_id ** friends,
 
 int Graph_edge_exists(Graph * graph, Vertex_id v_from, Vertex_id v_to);
 
-void Graph_print(Graph * graph, char * output_filename);
+void Graph_print(Graph * graph, FILE * outfile);
 
-void Graph_print_matrix(Graph * graph, char * output_filename);
+void Graph_print_matrix(Graph * graph, FILE * outfile);
 
-void Graph_print_friends(Graph * graph, char * output_filename);
+void Graph_print_friends(Graph * graph, FILE * outfile);
 
 #endif
