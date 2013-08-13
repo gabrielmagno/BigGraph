@@ -5,7 +5,7 @@ void Graph_calculate_PageRank(Graph * graph, double ** pagerank, int do_dangle_s
     Vertex_id vertex;
     double * pagerank_new, * partial_values;
     double initial_value, damping_value, dangle_sum;
-    unsigned int iteraction, n_elegible;
+    unsigned int iteration, n_elegible;
     
     pagerank_new = (double *) malloc((*graph).n_vertexes*sizeof(double));
     partial_values = (double *) malloc((*graph).n_vertexes*sizeof(double));
@@ -24,9 +24,9 @@ void Graph_calculate_PageRank(Graph * graph, double ** pagerank, int do_dangle_s
         pagerank_new[vertex] = 0.0;
     }
     
-    // Iteraction loop. Finishs if reaches the max number of iterations or 
+    // Iteration loop. Finishs if reaches the max number of iterations or 
     // the difference of the values between two iterations is minimal
-    for (iteraction = 1; (n_elegible > 0) && (iteraction <= MAX_ITERATIONS); iteraction++) {
+    for (iteration = 1; (n_elegible > 0) && (iteration <= MAX_ITERATIONS); iteration++) {
 
         // Pre-calculate the partial values that each vertex will 'provide' to its successors
         #pragma omp parallel for
@@ -84,6 +84,7 @@ void Graph_calculate_PageRank(Graph * graph, double ** pagerank, int do_dangle_s
                 pagerank_new[vertex] = 0.0;
             }
         }
+
     }
 
     free(pagerank_new);

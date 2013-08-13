@@ -8,6 +8,7 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
     // Config OpenMP
     omp_set_num_threads(omp_get_max_threads());
 
+    // Calculate the maximum possible value for the friends list
     for (vertex = 0; vertex < (*graph).n_vertexes; vertex++) {
         max_n_friends = MAX(MIN((*graph).vertexes[vertex].out_degree, (*graph).vertexes[vertex].in_degree), max_n_friends);
     }
@@ -16,11 +17,19 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
     {
         unsigned int i, j, n_friends, n_links, n_possible_links;
         Vertex_id * friends;
+
+        // Create a vector for storing the friends list
         friends = (Vertex_id *) malloc(max_n_friends*sizeof(Vertex_id));
+
+        // For each vertex
         #pragma omp for
         for (vertex = 0; vertex < (*graph).n_vertexes; vertex++) {
+
+            // Retrieve the friends list to measure the maximum number of links possible among friends
             Graph_vertex_friends(graph, vertex, &friends, &n_friends);
             n_possible_links = n_friends*(n_friends-1);
+
+            // Measure the actual number of links among friends to calculate the clustering coefficient
             n_links = 0;
             if (n_possible_links > 0) {
                 for (i = 0; i < n_friends; i++) {
@@ -35,7 +44,9 @@ void Graph_calculate_ClusteringCoefficient(Graph * graph, double ** clustering_c
             else {
                 (*clustering_coefficient)[vertex] = nan("");
             }
+
         }
+
         free(friends);
     }
 }
