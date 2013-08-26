@@ -57,8 +57,12 @@ void Graph_calculate_Distances(Graph * graph, FILE * outfile)
                 fprintf(outfile, "%d %d %d\n", vertex, actual_vertex, distance[actual_vertex]);
             }
         }
+        fflush(outfile);
 
     }
 
+    free(stack_actual);
+    free(stack_next);
+    free(distance);
 }
 

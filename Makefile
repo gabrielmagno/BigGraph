@@ -10,6 +10,7 @@ OBJS_GRAPH = build/graph_graph.o
 OBJS_ALGORITHM = $(NAME_ALGORITHMS:%=build/algorithm_%.o)
 OBJS_ALGORITHM_OMP = $(NAME_ALGORITHMS:%=build/algorithmomp_%.o)
 OBJS_DISTANCES = build/algorithm_distances.o
+OBJS_DISTANCES_OMP = build/algorithmomp_distances.o
 
 OBJ_SIZE = build/general_size.o
 OBJ_PRINT = build/general_print.o
@@ -21,8 +22,9 @@ BIN_PRINT = bin/print
 BIN_ALGORITHMS = bin/algorithms
 BIN_ALGORITHMS_OMP = bin/algorithms_omp
 BIN_DISTANCES = bin/distances
+BIN_DISTANCES_OMP = bin/distances_omp
 
-all: $(BIN_SIZE) $(BIN_PRINT) $(BIN_ALGORITHMS) $(BIN_ALGORITHMS_OMP) $(BIN_DISTANCES) 
+all: $(BIN_SIZE) $(BIN_PRINT) $(BIN_ALGORITHMS) $(BIN_ALGORITHMS_OMP) $(BIN_DISTANCES) $(BIN_DISTANCES_OMP)
 
 $(BIN_SIZE): $(OBJ_SIZE) $(OBJS_GRAPH) 
 	$(CC) $(INC) $(CFLAGS) $(OBJS_GRAPH) $< -o $@
@@ -38,6 +40,9 @@ $(BIN_ALGORITHMS_OMP): $(OBJ_ALGORITHMS) $(OBJS_ALGORITHM_OMP) $(OBJS_GRAPH)
 
 $(BIN_DISTANCES): $(OBJ_DISTANCES) $(OBJS_DISTANCES) $(OBJS_GRAPH)
 	$(CC) $(INC) $(CFLAGS) $(OBJS_GRAPH) $(OBJS_DISTANCES) $< -o $@
+
+$(BIN_DISTANCES_OMP): $(OBJ_DISTANCES) $(OBJS_DISTANCES_OMP) $(OBJS_GRAPH)
+	$(CC) $(INC) $(CFLAGS) -fopenmp $(OBJS_GRAPH) $(OBJS_DISTANCES_OMP) $< -o $@
 
 build/graph_%.o: src/graph/%.c src/graph/%.h
 	$(CC) $(INC) $(CFLAGS) -c $< -o $@
