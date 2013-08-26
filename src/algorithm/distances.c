@@ -1,6 +1,6 @@
-#include "eccentricity.h"
+#include "distances.h"
 
-void Graph_calculate_Eccentricity(Graph * graph, unsigned int ** eccentricity)
+void Graph_calculate_Distances(Graph * graph, FILE * outfile)
 {
     Vertex_id vertex, actual_vertex;
     Vertex_id * successors, * stack_actual, * stack_next, * stack_temp;
@@ -52,14 +52,11 @@ void Graph_calculate_Eccentricity(Graph * graph, unsigned int ** eccentricity)
 
         }
         
-        max_distance = 0;
-        printf("[%d] ", vertex);
         for (actual_vertex = 0; actual_vertex < (*graph).n_vertexes; actual_vertex++) {
-            max_distance = MAX(max_distance, distance[actual_vertex]);
-            printf("%d ", distance[actual_vertex]);
+            if((vertex != actual_vertex) && (distance[actual_vertex] != infinity)) {
+                fprintf(outfile, "%d %d %d\n", vertex, actual_vertex, distance[actual_vertex]);
+            }
         }
-        printf("| %d\n", max_distance);
-        (*eccentricity)[vertex] = max_distance;
 
     }
 
