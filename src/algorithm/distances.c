@@ -4,7 +4,7 @@ void Graph_calculate_Distances(Graph * graph, FILE * outfile)
 {
     Vertex_id vertex, actual_vertex;
     Vertex_id * successors, * stack_actual, * stack_next, * stack_temp;
-    unsigned int i, n_successors, stack_actual_i, stack_next_i, level, infinity, max_distance;
+    unsigned int i, n_successors, stack_actual_i, stack_next_i, level, infinity;
     unsigned int * distance;
 
     infinity = (*graph).n_vertexes + 1;

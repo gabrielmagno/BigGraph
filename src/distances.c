@@ -6,7 +6,7 @@
 int main(int argc, char * argv[])
 {
     Graph graph;
-    Vertex_id vertex;
+    //Vertex_id vertex
     
     FILE * infile, * outfile;
 
