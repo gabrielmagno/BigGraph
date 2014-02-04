@@ -17,10 +17,10 @@ fi
 
 make
 
-./bin/algorithms $file_base.graph $file_base.graph.temp
+./bin/algorithms_omp $file_base.graph $file_base.graph.temp
 
-echo "#num vertex_id in_degree out_degree recipr clust_coeff pagerank wcc scc" > $2
-join $file_base.tableids $file_base.graph.temp >> $2
+echo "#num vertex_id in_degree out_degree recipr clust_coeff pagerank wcc scc" > $file_out
+join $file_base.tableids $file_base.graph.temp >> $file_out
 
 rm $file_base.graph.temp
 
