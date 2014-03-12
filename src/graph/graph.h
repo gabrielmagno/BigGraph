@@ -31,6 +31,8 @@ void Graph_vertex_predecessors(Graph * graph, Vertex_id vertex, Vertex_id ** pre
 
 void Graph_vertex_friends(Graph * graph, Vertex_id vertex, Vertex_id ** friends, unsigned int * n_friends);
 
+void Graph_vertex_neighbours(Graph * graph, Vertex_id vertex, Vertex_id ** neighbours, unsigned int * n_neighbours);
+
 int Graph_edge_exists(Graph * graph, Vertex_id v_from, Vertex_id v_to);
 
 void Graph_print(Graph * graph, FILE * outfile);
@@ -38,5 +40,7 @@ void Graph_print(Graph * graph, FILE * outfile);
 void Graph_print_matrix(Graph * graph, FILE * outfile);
 
 void Graph_print_friends(Graph * graph, FILE * outfile);
+
+void Graph_print_neighbours(Graph * graph, FILE * outfile);
 
 #endif

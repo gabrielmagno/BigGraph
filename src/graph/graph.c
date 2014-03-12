@@ -84,6 +84,34 @@ void Graph_vertex_friends(Graph * graph, Vertex_id vertex, Vertex_id ** friends,
     }
 }
 
+void Graph_vertex_neighbours(Graph * graph, Vertex_id vertex, Vertex_id ** neighbours, unsigned int * n_neighbours)
+{
+    Vertex_id * out_list, * in_list;
+    unsigned int out_i = 0, in_i = 0, out_degree, in_degree;
+    Graph_vertex_successors(graph, vertex, &out_list, &out_degree);
+    Graph_vertex_predecessors(graph, vertex, &in_list, &in_degree);
+    *n_neighbours = 0;
+    while ((out_i < out_degree) && (in_i < in_degree)) {
+        if (out_list[out_i] < in_list[in_i]) {
+            (*neighbours)[(*n_neighbours)++] = out_list[out_i++];
+        }
+        else if (in_list[in_i] < out_list[out_i]) {
+            (*neighbours)[(*n_neighbours)++] = in_list[in_i++];
+        }
+        else {
+            (*neighbours)[(*n_neighbours)++] = out_list[out_i];
+            out_i++;
+            in_i++;
+        }
+    }
+    while (out_i < out_degree) {
+        (*neighbours)[(*n_neighbours)++] = out_list[out_i++];
+    }
+    while (in_i < in_degree) {
+        (*neighbours)[(*n_neighbours)++] = in_list[in_i++];
+    }
+}
+
 int Graph_edge_exists(Graph * graph, Vertex_id v_from, Vertex_id v_to)
 {
     Vertex_id key;
@@ -178,3 +206,23 @@ void Graph_print_friends(Graph * graph, FILE * outfile)
     free(friends);
     fprintf(outfile, "----------------------------------\n");
 }
+
+void Graph_print_neighbours(Graph * graph, FILE * outfile)
+{
+    Vertex_id vertex;
+    Vertex_id * neighbours;
+    unsigned int i, n_neighbours;
+    fprintf(outfile, "========== Neighbours List ==========\n");
+    neighbours = (Vertex_id *) malloc((*graph).n_vertexes*sizeof(Vertex_id));
+    for (vertex = 0; vertex < (*graph).n_vertexes; vertex++) {
+        Graph_vertex_neighbours(graph, vertex, &neighbours, &n_neighbours);
+        fprintf(outfile, "%d:", vertex);
+        for (i = 0; i < n_neighbours; i++) {
+            fprintf(outfile, " %d", neighbours[i]);
+        }
+        fprintf(outfile, "\n");
+    }
+    free(neighbours);
+    fprintf(outfile, "----------------------------------\n");
+}
+
