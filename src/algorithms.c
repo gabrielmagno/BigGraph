@@ -72,7 +72,7 @@ int main(int argc, char * argv[])
     time_stop(&time);
 
     time_start("Calculating PageRank", &time);
-    Graph_calculate_PageRank(&graph, &pagerank, 1);
+    Graph_calculate_PageRank(&graph, 1, &pagerank);
     time_stop(&time);
 
     time_start("Calculating Weakly CC", &time);

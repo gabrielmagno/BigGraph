@@ -1,6 +1,6 @@
 #include "pagerank.h"
 
-void Graph_calculate_PageRank(Graph * graph, double ** pagerank, int do_dangle_sum)
+void Graph_calculate_PageRank(Graph * graph, int do_dangle_sum, double ** pagerank)
 {
     Vertex_id vertex;
     Vertex_id * predecessors;

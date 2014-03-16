@@ -6,5 +6,5 @@
 #define MAX_ERROR 1e-6
 #define DAMPING_FACTOR 0.85
 
-void Graph_calculate_PageRank(Graph * graph, double ** pagerank, int do_dangle_sum);
+void Graph_calculate_PageRank(Graph * graph, int do_dangle_sum, double ** pagerank);
 
