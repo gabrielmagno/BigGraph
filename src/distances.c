@@ -6,33 +6,35 @@
 int main(int argc, char * argv[])
 {
     Graph graph;
-    //Vertex_id vertex
+    
+    unsigned int n_selected, distance;
+    unsigned int * distances_frequency;
     
     FILE * infile, * outfile;
 
-    if (argc >= 2) {
-        infile = fopen(argv[1], "r");
-    }
-    else {
-        infile = stdin;
-    }
+    n_selected = (argc >= 2) ? atoi(argv[1])       : 0;
+    infile     = (argc >= 3) ? fopen(argv[2], "r") : stdin;
+    outfile    = (argc >= 4) ? fopen(argv[3], "w") : stdout;
+
     Graph_open(&graph, infile);
-    if (argc >= 2) {
+    if (argc >= 3) {
         fclose(infile);
     }
 
-    if (argc >= 3) {
-        outfile = fopen(argv[2], "w");
+    distances_frequency = (unsigned int *) malloc((graph.n_vertexes + 1)*sizeof(unsigned int));
+    
+    Graph_calculate_Distances(&graph, n_selected, &distances_frequency);
+
+    for (distance = 0; distance < (graph.n_vertexes + 1); distance++) {
+        fprintf(outfile, "%d %d\n", distance, distances_frequency[distance]);
     }
-    else {
-        outfile = stdout;
-    }
-    Graph_calculate_Distances(&graph, outfile);
-    if (argc >= 3) {
+    if (argc >= 4) {
         fclose(outfile);
     }
    
     Graph_close(&graph);
+
+    free(distances_frequency);
     
     return EXIT_SUCCESS;
 }
