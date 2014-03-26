@@ -8,7 +8,7 @@ int main(int argc, char * argv[])
     Graph graph;
     
     unsigned int n_selected, distance;
-    unsigned int * distances_frequency;
+    unsigned long long int * distances_frequency;
     
     FILE * infile, * outfile;
 
@@ -21,7 +21,7 @@ int main(int argc, char * argv[])
         fclose(infile);
     }
 
-    distances_frequency = (unsigned int *) malloc((graph.n_vertexes + 1)*sizeof(unsigned int));
+    distances_frequency = (unsigned long long int *) malloc((graph.n_vertexes + 1)*sizeof(unsigned long long int));
     
     Graph_calculate_Distances(&graph, n_selected, &distances_frequency);
 

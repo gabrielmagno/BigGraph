@@ -1,6 +1,6 @@
 #include "distances.h"
 
-void Graph_calculate_Distances(Graph * graph, unsigned int n_selected, unsigned int ** distances_frequency)
+void Graph_calculate_Distances(Graph * graph, unsigned int n_selected, unsigned long long int ** distances_frequency)
 {
     Vertex_id vertex_random, vertex, actual_vertex;
     Vertex_id * selected, * successors, * stack_actual, * stack_next, * stack_temp;
