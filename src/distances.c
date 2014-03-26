@@ -26,7 +26,7 @@ int main(int argc, char * argv[])
     Graph_calculate_Distances(&graph, n_selected, &distances_frequency);
 
     for (distance = 0; distance < (graph.n_vertexes + 1); distance++) {
-        fprintf(outfile, "%d %ld\n", distance, distances_frequency[distance]);
+        fprintf(outfile, "%d %lld\n", distance, distances_frequency[distance]);
     }
     if (argc >= 4) {
         fclose(outfile);
