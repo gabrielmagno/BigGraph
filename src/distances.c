@@ -8,7 +8,7 @@ int main(int argc, char * argv[])
     Graph graph;
     
     unsigned int n_selected, distance;
-    unsigned long long int * distances_frequency;
+    unsigned long long int * dists_freq_directed, * dists_freq_undirected;
     
     FILE * infile, * outfile;
 
@@ -21,12 +21,14 @@ int main(int argc, char * argv[])
         fclose(infile);
     }
 
-    distances_frequency = (unsigned long long int *) malloc((graph.n_vertexes + 1)*sizeof(unsigned long long int));
+    dists_freq_directed = (unsigned long long int *) malloc((graph.n_vertexes + 1)*sizeof(unsigned long long int));
+    dists_freq_undirected = (unsigned long long int *) malloc((graph.n_vertexes + 1)*sizeof(unsigned long long int));
     
-    Graph_calculate_Distances(&graph, n_selected, &distances_frequency);
+    Graph_calculate_Distances(&graph, n_selected, 0, &dists_freq_directed);
+    Graph_calculate_Distances(&graph, n_selected, 1, &dists_freq_undirected);
 
     for (distance = 0; distance < (graph.n_vertexes + 1); distance++) {
-        fprintf(outfile, "%d %lld\n", distance, distances_frequency[distance]);
+        fprintf(outfile, "%d %lld %lld\n", distance, dists_freq_directed[distance], dists_freq_undirected[distance]);
     }
     if (argc >= 4) {
         fclose(outfile);
@@ -34,7 +36,8 @@ int main(int argc, char * argv[])
    
     Graph_close(&graph);
 
-    free(distances_frequency);
+    free(dists_freq_directed);
+    free(dists_freq_undirected);
     
     return EXIT_SUCCESS;
 }

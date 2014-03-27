@@ -1,11 +1,11 @@
 #include "distances.h"
 
-void Graph_calculate_Distances(Graph * graph, unsigned int n_selected, unsigned long long int ** distances_frequency)
+void Graph_calculate_Distances(Graph * graph, unsigned int n_selected, int undirected, unsigned long long int ** distances_frequency)
 {
     Vertex_id vertex_random, vertex, actual_vertex;
-    Vertex_id * selected, * successors, * stack_actual, * stack_next, * stack_temp;
+    Vertex_id * selected, * successors, * predecessors, * stack_actual, * stack_next, * stack_temp;
     char * marked;
-    unsigned int infinity, i_selected, distance, i, n_successors, stack_actual_i, stack_next_i, level;
+    unsigned int infinity, i_selected, distance, i, n_successors, n_predecessors, stack_actual_i, stack_next_i, level;
     unsigned int * distances;
     
     infinity = (*graph).n_vertexes + 1;
@@ -94,6 +94,26 @@ void Graph_calculate_Distances(Graph * graph, unsigned int n_selected, unsigned 
 
                     }
                 }
+
+                // If the graph is considered undirected, also explore predecessors
+                if (undirected) {
+                    
+                    // For each successor not yet reached,
+                    Graph_vertex_predecessors(graph, actual_vertex, &predecessors, &n_predecessors);
+                    for (i = 0; i < n_predecessors; i++) {
+                        if (distances[predecessors[i]] == infinity) {
+
+                            // Set distance as the actual level
+                            distances[predecessors[i]] = level;
+
+                            // Insert predecessor in the next-level stack
+                            stack_next[stack_next_i++] = predecessors[i];
+
+                        }
+                    }
+
+                }
+
 
             }
 

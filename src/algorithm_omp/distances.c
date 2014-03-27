@@ -1,6 +1,6 @@
 #include "distances.h"
 
-void Graph_calculate_Distances(Graph * graph, unsigned int n_selected, unsigned long long int ** distances_frequency)
+void Graph_calculate_Distances(Graph * graph, unsigned int n_selected, int undirected, unsigned long long int ** distances_frequency)
 {
     Vertex_id vertex_random;
     Vertex_id * selected;
@@ -55,8 +55,8 @@ void Graph_calculate_Distances(Graph * graph, unsigned int n_selected, unsigned 
     #pragma omp parallel
     {
         Vertex_id vertex, actual_vertex;
-        Vertex_id * successors, * stack_actual, * stack_next, * stack_temp;
-        unsigned int i, n_successors, stack_actual_i, stack_next_i, level;
+        Vertex_id * successors, * predecessors, * stack_actual, * stack_next, * stack_temp;
+        unsigned int i, n_successors, n_predecessors, stack_actual_i, stack_next_i, level;
         unsigned int * distances;
 
         stack_actual = (Vertex_id *) malloc(((*graph).n_vertexes)*sizeof(Vertex_id));
@@ -105,6 +105,25 @@ void Graph_calculate_Distances(Graph * graph, unsigned int n_selected, unsigned 
                             stack_next[stack_next_i++] = successors[i];
 
                         }
+                    }
+
+                    // If the graph is considered undirected, also explore predecessors
+                    if (undirected) {
+
+                        // For each successor not yet reached,
+                        Graph_vertex_predecessors(graph, actual_vertex, &predecessors, &n_predecessors);
+                        for (i = 0; i < n_predecessors; i++) {
+                            if (distances[predecessors[i]] == infinity) {
+
+                                // Set distance as the actual level
+                                distances[predecessors[i]] = level;
+
+                                // Insert predecessor in the next-level stack
+                                stack_next[stack_next_i++] = predecessors[i];
+
+                            }
+                        }
+
                     }
 
                 }
