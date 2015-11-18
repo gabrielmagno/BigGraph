@@ -116,7 +116,7 @@ int Graph_edge_exists(Graph * graph, Vertex_id v_from, Vertex_id v_to)
 {
     Vertex_id key;
     Vertex_id * array;
-    unsigned int i_min, i_mid, i_max, i, max;
+    unsigned int i_min, i_mid, i_max;
     
     // Choose the smallest neighbour list to search for the edge
     if ((*graph).vertexes[v_from].out_degree < (*graph).vertexes[v_to].in_degree) {
@@ -132,11 +132,8 @@ int Graph_edge_exists(Graph * graph, Vertex_id v_from, Vertex_id v_to)
 
     // Binary search
     i_min = 0;
-    max = i_max;
     while (i_min < i_max) {
         i_mid = (i_min + i_max) >> 1;
-        for (i = 0; i <= max; i++) {
-        }
         if (array[i_mid] < key) {
             i_min = i_mid + 1;
         }
